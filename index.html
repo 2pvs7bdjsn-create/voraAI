@@ -263,7 +263,7 @@ textarea { flex: 1; min-width: 0; resize: none; max-height: 160px; background: v
     }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (j) { return { ok: r.ok, j: j }; });
     }).then(function (r) {
-      if (!r.ok || !r.j.text) throw new Error(r.j.error || "error");
+      if (!r.ok || !r.j.text) throw new Error((r.j.error || ("Error " + r.status + " (la función no respondió)")) + (r.j.detail ? " [" + r.j.detail + "]" : ""));
       out.className = "msg bot";
       out.textContent = r.j.text;
       current.messages.push({ role: "assistant", content: r.j.text });
@@ -274,7 +274,7 @@ textarea { flex: 1; min-width: 0; resize: none; max-height: 160px; background: v
       userEl.remove();
       input.value = text; resize();
       out.className = "msg bot err";
-      out.textContent = "No pude responder. Tu mensaje sigue en la caja, inténtalo de nuevo.";
+      out.textContent = "No pude responder: " + (e && e.message ? e.message : "error desconocido") + ". Tu mensaje sigue en la caja.";
     }).then(function () {
       busy = false; send.disabled = false; input.focus();
     });
